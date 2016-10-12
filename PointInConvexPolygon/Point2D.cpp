@@ -19,70 +19,70 @@ Point2D Point2D::normal(Direction d) const
 	return (d == LEFT) ? Point2D(-(this->y), this->x) : Point2D(this->y, -(this->x));
 }
 
-double Point2D::lengthSquare()
+double Point2D::lengthSquare() const
 {
 	return dot(*this);
 }
 
-double Point2D::length()
+double Point2D::length() const
 {
 	return sqrt(lengthSquare());
 }
 
-inline Point2D Point2D::operator-()
+Point2D Point2D::operator-() const
 {
 	return Point2D(-this->x, -this->y);
 }
 
-inline Point2D Point2D::operator+(const Point2D & other)
+Point2D Point2D::operator+(const Point2D & other) const
 {
 	return Point2D(this->x + other.x, this->y + other.y);
 }
 
-inline Point2D Point2D::operator-(const Point2D & other)
+Point2D Point2D::operator-(const Point2D & other) const
 {
 	return Point2D(this->x - other.x, this->y - other.y);
 }
 
-inline Point2D Point2D::operator*(double value)
+Point2D Point2D::operator*(double value) const
 {
 	return Point2D(this->x * value, this->y * value);
 }
 
-inline Point2D Point2D::operator/(double value)
+Point2D Point2D::operator/(double value) const
 {
 	return  (*this) * (1.0 / value);
 }
 
-inline void Point2D::operator+=(const Point2D & other)
+void Point2D::operator+=(const Point2D & other)
 {
 	this->x += other.x;
 	this->y += other.y;
 }
 
-inline void Point2D::operator-=(const Point2D & other)
+void Point2D::operator-=(const Point2D & other)
 {
 	this->x -= other.x;
 	this->y -= other.y;
 }
 
-inline void Point2D::operator*=(double value)
+void Point2D::operator*=(double value)
 {
 	this->x *= value;
 	this->y *= value;
 }
 
-inline void Point2D::operator/=(double value)
+void Point2D::operator/=(double value)
 {
 	(*this) *= (1.0 / value);
 }
 
-inline Point2D operator*(double value, const Point2D & point)
+Point2D operator*(double value, const Point2D & point)
 {
 	return Point2D(point.x * value, point.y * value);
 }
 
-inline Point2D operator/(double value, const Point2D & point)
+Point2D operator/(double value, const Point2D & point)
 {
 	return (1 / value) * point;
 }
