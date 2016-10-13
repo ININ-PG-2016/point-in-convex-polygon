@@ -1,5 +1,9 @@
 #include <iostream>
 #include "Point2D.h"
+#include "Polygon.h"
+
+
+#include <vector>
 
 int main(int argc, char **argv)
 {
@@ -9,8 +13,15 @@ int main(int argc, char **argv)
 	p3 *= 2;
 	p3 += Point2D(2, 4);
 	p3 = p3.normal(Direction::LEFT);
-	std::cout << p3.x << " " << p3.y <<std::endl;
-	std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
-	std::cin.get();
+	//std::cout << p3.x << " " << p3.y <<std::endl;
+	//std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
+	
+
+	Polygon *poly = new Polygon(1000000);
+	poly->saveToFile("out.poly");
+	delete poly;
+	
+	system("DrawPoly.exe");
+
 	return 0;
 }
