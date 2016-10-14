@@ -6,6 +6,7 @@
 
 #include <vector>
 #include "Geometry.h"
+#include "OLogNSlabTest.h"
 
 int main(int argc, char **argv)
 {
@@ -19,11 +20,14 @@ int main(int argc, char **argv)
 	//std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
 	
 
-	Polygon *poly = new Polygon(1000000);
+	Polygon *poly = new Polygon(10);
 	poly->saveToFile("out.poly");
+	OLogNSlabTest test(*poly);
+	test.preprocess();
+	//test the points here (not implemented yet)
+	test.deinit();
 	delete poly;
 	
-	system("DrawPoly.exe");
-
+	//system("DrawPoly.exe");
 	return 0;
 }

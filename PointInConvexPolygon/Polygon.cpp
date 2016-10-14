@@ -62,10 +62,10 @@ void Polygon::generate(int numVertices)
 
 	this->vertices.clear();
 
-	this->vertices.push_back(Point2D(-1.0, -1.0));
-	this->vertices.push_back(Point2D( 1.0, -1.0));
-	this->vertices.push_back(Point2D( 1.0,  1.0));
-	this->vertices.push_back(Point2D(-1.0,  1.0));
+	this->vertices.push_back(Point2D(-1.0,  0.0));
+	this->vertices.push_back(Point2D( 0.0, -1.0));
+	this->vertices.push_back(Point2D( 1.0,  0.0));
+	this->vertices.push_back(Point2D( 0.0,  1.0));
 
 	int randIndex = 0;
 
