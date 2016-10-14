@@ -20,14 +20,13 @@ int main(int argc, char **argv)
 	//std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
 	
 
-	Polygon *poly = new Polygon(10);
+	Polygon *poly = new Polygon(150);
 	poly->saveToFile("out.poly");
 	OLogNSlabTest test(*poly);
 	test.preprocess();
 	//test the points here (not implemented yet)
 	test.deinit();
 	delete poly;
-	
 	//system("DrawPoly.exe");
 	return 0;
 }

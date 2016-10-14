@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PointInConvexPolygonTest.h"
-#include "Geometry.h"
 
 class OLogNSlabTest : public PointInConvexPolygonTest
 {
@@ -11,7 +10,7 @@ private:
 
 	struct Slab
 	{
-		double yTop;
+		double yBottom;
 		Function f1;
 		Function f2;
 	};
