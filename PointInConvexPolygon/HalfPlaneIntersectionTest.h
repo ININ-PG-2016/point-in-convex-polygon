@@ -9,5 +9,10 @@ public:
 	void preprocess();
 	void deinit();
 	bool testPoint(const Point2D & point);
+
+private:
+	void prepareImplicitLine(const Point2D &start, const Point2D &end, Function *function);
+	int vertexCount;
+	Function *functions;
 };
 
