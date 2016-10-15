@@ -58,12 +58,25 @@ int main(int argc, char **argv)
 	//std::cout << p3.x << " " << p3.y <<std::endl;
 	//std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
 	
-
+	srand((unsigned int)time(nullptr));
+	const int pointCount = 100000;
+	Point2D* points = new Point2D[pointCount];
+	bool* inclusion = new bool[pointCount];
+	for (int i = 0; i < pointCount; i++)
+	{
+		points[i].x = ((double)rand() / (RAND_MAX)) * 2 - 1;
+		points[i].y = ((double)rand() / (RAND_MAX)) * 2 - 1;
+		inclusion[i] = false;
+	}
 	class Polygon *poly = new class Polygon(10000);
 	poly->saveToFile("out.poly");
 	OLogNSlabTest test(*poly);
+	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
-	//test the points here (not implemented yet)
+	std::cout << "testing points" << std::endl;
+	for (int i = 0; i < pointCount; i++)
+		inclusion[i] = test.testPoint(points[i]);
+	std::cout << "done testing" << std::endl;
 	test.deinit();
 
 	ULONG_PTR gdiplusToken;
@@ -71,6 +84,9 @@ int main(int argc, char **argv)
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 	Gdiplus::Bitmap bmp(1000, 1000);
 	Gdiplus::Graphics gfx(&bmp);
+	for (unsigned int i = 0; i < bmp.GetWidth(); i++)
+		for (unsigned int j = 0; j < bmp.GetHeight(); j++)
+			bmp.SetPixel(i, j, Gdiplus::Color(255, 0, 0, 0));
 	Gdiplus::Pen pen(Gdiplus::Color(255, 255, 0, 0), 1);
 	for (int i = 0; i < poly->vertices.size() - 1; i++)
 		gfx.DrawLine(&pen, (int)(poly->vertices[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
@@ -81,12 +97,21 @@ int main(int argc, char **argv)
 					   (int)(poly->vertices[poly->vertices.size() - 1].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
 					   (int)(poly->vertices[0].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
 					   (int)(poly->vertices[0].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2));
+	for (int i = 0; i < pointCount; i++)
+	{
+		Gdiplus::Pen pointPen(inclusion[i] ? Gdiplus::Color(255, 0, 0, 255) : Gdiplus::Color(255, 255, 255, 255), 1);
+		gfx.DrawEllipse(&pointPen, (int)(points[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+			(int)(points[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2), 2, 2);
+	}
 
 	CLSID  encoderClsid;
 	GetEncoderClsid(L"image/png", &encoderClsid);
 	bmp.Save(L"polygon.png", &encoderClsid);
 
 	delete poly;
+	delete[] points;
+	delete[] inclusion;
 	//system("DrawPoly.exe");
+	std::cin.get();
 	return 0;
 }

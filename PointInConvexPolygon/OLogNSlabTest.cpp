@@ -1,7 +1,7 @@
 #include "OLogNSlabTest.h"
 #include "Geometry.h"
 
-//#include <iostream>
+#include <iostream>
 
 void OLogNSlabTest::preprocess()
 {
@@ -15,13 +15,14 @@ void OLogNSlabTest::preprocess()
 		if (vertices[i].y < vertices[minYIndex].y)
 			minYIndex = i;
 	}
-	slabs = new Slab[vertices.size() - 1];
+	slabCount = (int)vertices.size() - 1;
+	slabs = new Slab[slabCount];
 	int leftIndex = minYIndex;
 	int rightIndex = minYIndex;
 	int nextLeft = leftIndex - 1;
 	int nextRight = rightIndex + 1;
 	double nextBottom = vertices[minYIndex].y;
-	for (int i = 0; i < vertices.size() - 1; i++)
+	for (int i = 0; i < slabCount; i++)
 	{
 		if (nextLeft < 0)
 			nextLeft = (int)vertices.size() - 1;
@@ -60,5 +61,24 @@ void OLogNSlabTest::deinit()
 
 bool OLogNSlabTest::testPoint(const Point2D & point)
 {
-	return true;
+	double x = point.x;
+	double y = point.y;
+	if (y < polygon.vertices[minYIndex].y || y > polygon.vertices[maxYIndex].y)
+		return false;
+	int topSlab = slabCount;
+	int bottomSlab = 0;
+	int middleSlab = topSlab / 2;
+	while (topSlab - bottomSlab > 1)
+	{
+		const Slab & slab = slabs[middleSlab];
+		if (y > slab.yBottom)
+			bottomSlab = middleSlab;
+		else
+			topSlab = middleSlab;
+		middleSlab = (topSlab + bottomSlab) / 2;
+	}
+	const Slab & slab = slabs[middleSlab];
+	if (slab.f1.a * x + slab.f1.b * y + slab.f1.c >= 0 && slab.f2.a * x + slab.f2.b * y + slab.f2.c >= 0)
+		return true;
+	return false;
 }

@@ -15,6 +15,7 @@ private:
 		Function f2;
 	};
 
+	int slabCount;
 	Slab* slabs;
 
 public:
