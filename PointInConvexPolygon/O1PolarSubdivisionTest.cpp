@@ -1,5 +1,8 @@
 #include "O1PolarSubdivisionTest.h"
+#include "Geometry.h"
 #include <math.h>
+
+//#include <iostream>
 
 int O1PolarSubdivisionTest::getWedgeIndex(const Point2D & point)
 {
@@ -47,9 +50,28 @@ void O1PolarSubdivisionTest::preprocess()
 	}
 	centroid /= (6 * signedArea);
 
-	wedges = new std::vector<Function>[wedgesPerOctant * 8];
+	int wedgeCount = wedgesPerOctant * 8;
+	wedges = new std::vector<Function>[wedgeCount];
 
-	//to be continued
+	int edgeStartIndex = getWedgeIndex(vertices[0]);
+	for (int i = 1; i < vertices.size() + 1; i++)
+	{
+		int index = i % vertices.size();
+		Function func;
+		int edgeEndIndex = getWedgeIndex(vertices[index]);
+		Geometry::getImplicitLine(vertices[index == 0 ? (vertices.size() - 1) : (index - 1)], vertices[index], &func.a, &func.b, &func.c);
+		if (edgeStartIndex <= edgeEndIndex)
+			for (int j = edgeStartIndex; j <= edgeEndIndex; j++)
+				wedges[j].push_back(func);
+		else
+			for (int j = edgeStartIndex; j != edgeEndIndex + 1; j = (j + 1) % wedgeCount)
+				wedges[j].push_back(func);
+		edgeStartIndex = edgeEndIndex;
+	}
+	/*for (int i = 0; i < wedgeCount; i++)
+	{
+		std::cout << wedges[i].size() << std::endl;
+	}*/
 }
 
 void O1PolarSubdivisionTest::deinit()
@@ -59,5 +81,9 @@ void O1PolarSubdivisionTest::deinit()
 
 bool O1PolarSubdivisionTest::testPoint(const Point2D & point)
 {
+	int wedgeIndex = getWedgeIndex(point);
+	for (int i = 0; i < wedges[wedgeIndex].size(); i++)
+		if (wedges[wedgeIndex][i](point) < 0)
+			return false;
 	return true;
 }

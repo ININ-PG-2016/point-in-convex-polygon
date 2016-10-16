@@ -73,13 +73,15 @@ int main(int argc, char **argv)
 	class Polygon *poly = new class Polygon(10000);
 	poly->saveToFile("out.poly");
 	O1PolarSubdivisionTest test(*poly);
-	test.setWedgesPerOctant(32);
+	test.setWedgesPerOctant(poly->vertices.size() / 8);
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;
+	long t = clock();
 	for (int i = 0; i < pointCount; i++)
 		inclusion[i] = test.testPoint(points[i]);
-	std::cout << "done testing" << std::endl;
+	t = clock() - t;
+	std::cout << "done testing - " << t << " ms" << std::endl;
 	test.deinit();
 
 	ULONG_PTR gdiplusToken;

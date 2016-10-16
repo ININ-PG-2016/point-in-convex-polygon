@@ -72,7 +72,8 @@ void Polygon::generate(int numVertices)
 	for (int i = 0; i < numVertices - 4; i++)
 	{
 		int currentCount = this->vertices.size();
-
+		if (currentCount % 1000 == 0)
+			std::cout << currentCount << std::endl;
 		randIndex = rand() % currentCount;
 
 		double p1 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
