@@ -73,9 +73,8 @@ int main(int argc, char **argv)
 	}
 	class Polygon *poly = new class Polygon(10000);
 	poly->saveToFile("out.poly");
-	/*O1PolarSubdivisionTest test(*poly);
-	test.setWedgesPerOctant(32);
-	OLogNPolarSubdivisionTest test(*poly);
+	O1PolarSubdivisionTest test(*poly);
+	test.setWedgesPerOctant(poly->vertices.size() / 8);
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;
