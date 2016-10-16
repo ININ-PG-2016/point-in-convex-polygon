@@ -1,13 +1,14 @@
 #include <iostream>
 #include <time.h>
+#include <vector>
+
 #include "Point2D.h"
 #include "Polygon.h"
 
-
-#include <vector>
 #include "Geometry.h"
-#include "OLogNSlabTest.h"
 #include "HalfPlaneIntersectionTest.h"
+#include "OLogNSlabTest.h"
+#include "OLogNPolarSubdivisionTest.h"
 #include "O1PolarSubdivisionTest.h"
 
 #include <Windows.h>
@@ -72,8 +73,9 @@ int main(int argc, char **argv)
 	}
 	class Polygon *poly = new class Polygon(10000);
 	poly->saveToFile("out.poly");
-	O1PolarSubdivisionTest test(*poly);
-	test.setWedgesPerOctant(32);
+	/*O1PolarSubdivisionTest test(*poly);
+	test.setWedgesPerOctant(32);*/
+	OLogNPolarSubdivisionTest test(*poly);
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;

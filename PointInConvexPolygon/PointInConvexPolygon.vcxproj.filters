@@ -8,6 +8,7 @@
     <ClCompile Include="OLogNSlabTest.cpp" />
     <ClCompile Include="HalfPlaneIntersectionTest.cpp" />
     <ClCompile Include="O1PolarSubdivisionTest.cpp" />
+    <ClCompile Include="OLogNPolarSubdivisionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -17,5 +18,6 @@
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="HalfPlaneIntersectionTest.h" />
     <ClInclude Include="O1PolarSubdivisionTest.h" />
+    <ClInclude Include="OLogNPolarSubdivisionTest.h" />
   </ItemGroup>
 </Project>
