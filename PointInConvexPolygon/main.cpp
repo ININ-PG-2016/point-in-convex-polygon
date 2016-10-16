@@ -7,6 +7,8 @@
 #include <vector>
 #include "Geometry.h"
 #include "OLogNSlabTest.h"
+#include "HalfPlaneIntersectionTest.h"
+#include "O1PolarSubdivisionTest.h"
 
 #include <Windows.h>
 #include <gdiplus.h>
@@ -70,7 +72,8 @@ int main(int argc, char **argv)
 	}
 	class Polygon *poly = new class Polygon(10000);
 	poly->saveToFile("out.poly");
-	OLogNSlabTest test(*poly);
+	O1PolarSubdivisionTest test(*poly);
+	test.setWedgesPerOctant(32);
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;
