@@ -29,7 +29,7 @@ bool HalfPlaneIntersectionTest::testPoint(const Point2D & point)
 {
 	for (int i = 0; i < vertexCount; i++)
 	{
-		if (this->functions[i](point) < 0)
+		if (this->functions[i](point) <= 0)
 		{
 			return false;
 		}
