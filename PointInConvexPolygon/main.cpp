@@ -85,27 +85,31 @@ int main(int argc, char **argv)
 	ULONG_PTR gdiplusToken;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
-	Gdiplus::Bitmap bmp(1000, 1000);
+	Gdiplus::Bitmap bmp(2500, 2500);
 	Gdiplus::Graphics gfx(&bmp);
 	for (unsigned int i = 0; i < bmp.GetWidth(); i++)
 		for (unsigned int j = 0; j < bmp.GetHeight(); j++)
-			bmp.SetPixel(i, j, Gdiplus::Color(255, 0, 0, 0));
-	Gdiplus::Pen pen(Gdiplus::Color(255, 255, 0, 0), 1);
-	for (int i = 0; i < poly->vertices.size() - 1; i++)
-		gfx.DrawLine(&pen, (int)(poly->vertices[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
-						   (int)(poly->vertices[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
-						   (int)(poly->vertices[i + 1].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
-						   (int)(poly->vertices[i + 1].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2));
-	gfx.DrawLine(&pen, (int)(poly->vertices[poly->vertices.size() - 1].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
-					   (int)(poly->vertices[poly->vertices.size() - 1].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
-					   (int)(poly->vertices[0].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
-					   (int)(poly->vertices[0].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2));
+			bmp.SetPixel(i, j, Gdiplus::Color(255, 255, 255, 255));
+
+	int pointRadius = 2;
+
 	for (int i = 0; i < pointCount; i++)
 	{
-		Gdiplus::Pen pointPen(inclusion[i] ? Gdiplus::Color(255, 0, 0, 255) : Gdiplus::Color(255, 255, 255, 255), 1);
-		gfx.DrawEllipse(&pointPen, (int)(points[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
-			(int)(points[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2), 2, 2);
+		Gdiplus::SolidBrush pointBrush(inclusion[i] ? Gdiplus::Color(255, 0, 255, 0) : Gdiplus::Color(255, 255, 0, 0));
+		gfx.FillEllipse(&pointBrush, (int)(points[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius,
+			(int)(points[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius, 2 * pointRadius, 2 * pointRadius);
 	}
+
+	Gdiplus::Pen pen(Gdiplus::Color(150, 0, 0, 0), 3);
+	for (int i = 0; i < poly->vertices.size() - 1; i++)
+		gfx.DrawLine(&pen, (int)(poly->vertices[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[i + 1].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[i + 1].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2));
+	gfx.DrawLine(&pen, (int)(poly->vertices[poly->vertices.size() - 1].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[poly->vertices.size() - 1].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[0].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[0].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2));
 
 	CLSID  encoderClsid;
 	GetEncoderClsid(L"image/png", &encoderClsid);
