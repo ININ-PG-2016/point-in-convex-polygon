@@ -79,6 +79,7 @@ void Polygon::generate(int numVertices)
 		double p1 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
 		double p2 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
 
+
 		//std::cout << "generated p: " << p1 << ", " << p2 << std::endl;
 
 		Point2D erased = this->vertices[randIndex];

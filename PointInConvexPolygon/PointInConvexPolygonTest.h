@@ -15,7 +15,8 @@ protected:
 		double c;
 
 	public:
-		inline double operator()(const Point2D &point) {
+		inline double operator()(const Point2D &point)
+		{
 			return a * point.x + b * point.y + c;
 		}
 	};

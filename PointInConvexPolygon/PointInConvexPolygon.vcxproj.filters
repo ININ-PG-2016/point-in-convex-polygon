@@ -9,6 +9,7 @@
     <ClCompile Include="HalfPlaneIntersectionTest.cpp" />
     <ClCompile Include="O1PolarSubdivisionTest.cpp" />
     <ClCompile Include="OLogNPolarSubdivisionTest.cpp" />
+    <ClCompile Include="O1SlabTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -19,5 +20,6 @@
     <ClInclude Include="HalfPlaneIntersectionTest.h" />
     <ClInclude Include="O1PolarSubdivisionTest.h" />
     <ClInclude Include="OLogNPolarSubdivisionTest.h" />
+    <ClInclude Include="O1SlabTest.h" />
   </ItemGroup>
 </Project>
