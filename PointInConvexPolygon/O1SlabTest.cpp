@@ -5,7 +5,7 @@
 
 void O1SlabTest::preprocess()
 {
-	const std::deque<Point2D> & vertices = polygon.vertices;
+	const std::vector<Point2D> & vertices = polygon.vertices;
 	this->vertexCount = vertices.size();
 
 	std::vector<SimpleSlab> simpleSlabs;
@@ -63,7 +63,7 @@ bool O1SlabTest::testPoint(const Point2D & point)
 
 void O1SlabTest::prepareSimpleSlabs(std::vector<SimpleSlab>& simpleSlabs)
 {
-	const std::deque<Point2D> & vertices = polygon.vertices;
+	const std::vector<Point2D> & vertices = polygon.vertices;
 
 	yMax = -HUGE_VAL;
 	yMin = HUGE_VAL;
@@ -176,7 +176,7 @@ void O1SlabTest::computeDistances(const std::vector<SimpleSlab>& simpleSlabs)
 
 void O1SlabTest::prepareFunctions()
 {
-	const std::deque<Point2D> & vertices = polygon.vertices;
+	const std::vector<Point2D> & vertices = polygon.vertices;
 
 	this->functions = new Function[vertexCount];
 

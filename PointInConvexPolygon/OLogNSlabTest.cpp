@@ -5,7 +5,7 @@
 
 void OLogNSlabTest::preprocess()
 {
-	const std::deque<Point2D> & vertices = polygon.vertices;
+	const std::vector<Point2D> & vertices = polygon.vertices;
 	maxYIndex = 0;
 	minYIndex = 0;
 	for (int i = 0; i < vertices.size(); i++)

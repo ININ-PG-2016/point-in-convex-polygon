@@ -47,7 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CrossProductTest.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="HalfPlaneIntersectionTest.cpp" />
     <ClCompile Include="main.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Polygon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CrossProductTest.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="HalfPlaneIntersectionTest.h" />
     <ClInclude Include="O1PolarSubdivisionTest.h" />

@@ -35,7 +35,7 @@ int O1PolarSubdivisionTest::getWedgeIndex(const Point2D & point)
 
 void O1PolarSubdivisionTest::preprocess()
 {
-	const std::deque<Point2D> & vertices = polygon.vertices;
+	const std::vector<Point2D> & vertices = polygon.vertices;
 	int size = vertices.size();
 	centroid = Point2D(0, 0);
 	double signedArea = 0;

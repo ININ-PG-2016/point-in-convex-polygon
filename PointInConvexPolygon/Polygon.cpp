@@ -18,7 +18,7 @@ Polygon::Polygon(int vertexCount)
 }
 
 
-Polygon::Polygon(const std::deque<Point2D>& vertices)
+Polygon::Polygon(const std::vector<Point2D>& vertices)
 {
 	this->vertices = vertices;
 }

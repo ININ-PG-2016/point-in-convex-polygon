@@ -3,7 +3,7 @@
 
 void OLogNPolarSubdivisionTest::preprocess()
 {
-	const std::deque<Point2D> & vertices = polygon.vertices;
+	const std::vector<Point2D> & vertices = polygon.vertices;
 
 	this->vertexCount = vertices.size();
 	this->origin = vertices[0];
