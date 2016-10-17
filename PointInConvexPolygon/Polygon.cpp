@@ -73,11 +73,12 @@ void Polygon::generate(int numVertices)
 	{
 		int currentCount = this->vertices.size();
 		/*if (currentCount % 1000 == 0)
-			std::cout << currentCount << std::endl;
-		randIndex = rand() % currentCount;*/
+			std::cout << currentCount << std::endl;*/
+		randIndex = rand() % currentCount;
 
 		double p1 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
 		double p2 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
+
 
 		//std::cout << "generated p: " << p1 << ", " << p2 << std::endl;
 

@@ -47,9 +47,7 @@ bool OLogNPolarSubdivisionTest::testPoint(const Point2D & point)
 		}
 	}
 
-	Function f = this->f[right - 1];
-
-	return f(point) >= 0;
+	return f[right - 1](point) >= 0;
 }
 
 void OLogNPolarSubdivisionTest::prepareImplicitLine(const Point2D & start, const Point2D & end, Function * function)

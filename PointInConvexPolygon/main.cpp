@@ -10,6 +10,7 @@
 #include "OLogNSlabTest.h"
 #include "OLogNPolarSubdivisionTest.h"
 #include "O1PolarSubdivisionTest.h"
+#include "O1SlabTest.h"
 
 #include <Windows.h>
 #include <gdiplus.h>
@@ -62,7 +63,7 @@ int main(int argc, char **argv)
 	//std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
 	
 	srand((unsigned int)time(nullptr));
-	const int pointCount = 100000;
+	const int pointCount = 10000000;
 	Point2D* points = new Point2D[pointCount];
 	bool* inclusion = new bool[pointCount];
 	for (int i = 0; i < pointCount; i++)
@@ -71,10 +72,10 @@ int main(int argc, char **argv)
 		points[i].y = ((double)rand() / (RAND_MAX)) * 2 - 1;
 		inclusion[i] = false;
 	}
-	class Polygon *poly = new class Polygon(10000);
+	class Polygon *poly = new class Polygon(100000);
 	poly->saveToFile("out.poly");
-	O1PolarSubdivisionTest test(*poly);
-	test.setWedgesPerOctant(poly->vertices.size() / 8);
+	O1SlabTest test(*poly);
+	test.setMaxSlabCount(poly->vertices.size() * 2);
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;
