@@ -61,6 +61,7 @@ void Polygon::generate(int numVertices)
 	}
 
 	this->vertices.clear();
+	//this->vertices.resize(numVertices);
 
 	this->vertices.push_back(Point2D(-1.0,  0.0));
 	this->vertices.push_back(Point2D( 0.0, -1.0));
@@ -93,5 +94,46 @@ void Polygon::generate(int numVertices)
 
 		this->vertices.erase(this->vertices.begin() + randIndex);
 		this->vertices.insert(this->vertices.begin() + randIndex, added.begin(), added.end());
+	}
+
+	double yMin = HUGE_VAL, yMax = -HUGE_VAL;
+	double xMin = HUGE_VAL, xMax = -HUGE_VAL;
+
+	for (int i = 0; i < numVertices; i++)
+	{
+		Point2D vertex = this->vertices[i];
+
+		if (vertex.x > xMax)
+		{
+			xMax = vertex.x;
+		}
+
+		if (vertex.x < xMin)
+		{
+			xMin = vertex.x;
+		}
+
+		if (vertex.y > yMax)
+		{
+			yMax = vertex.y;
+		}
+
+		if (vertex.y < yMin)
+		{
+			yMin = vertex.y;
+		}
+	}
+
+	double deltaX = xMax - xMin;
+	double scaleX = 2.0 / deltaX;
+	double deltaY = yMax - yMin;
+	double scaleY = 2.0 / deltaY;
+	double centerX = (xMax + xMin) / 2;
+	double centerY = (yMax + yMin) / 2;
+
+	for (int i = 0; i < numVertices; i++)
+	{
+		this->vertices[i].x = (this->vertices[i].x - centerX) * scaleX;
+		this->vertices[i].y = (this->vertices[i].y - centerY) * scaleY;
 	}
 }
