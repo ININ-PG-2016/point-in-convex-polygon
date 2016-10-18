@@ -29,6 +29,7 @@ Polygon::~Polygon()
 bool Polygon::saveToFile(char * filename)
 {
 	std::ofstream out(filename);
+	out.precision(30);
 
 	if (!out)
 	{
@@ -38,7 +39,7 @@ bool Polygon::saveToFile(char * filename)
 
 	for (auto vertex : this->vertices)
 	{
-		out << vertex.x << " " << vertex.y << std::endl;
+		out << " " << vertex.x << " " << vertex.y << std::endl;
 	}
 
 	out.close();
@@ -73,8 +74,8 @@ void Polygon::generate(int numVertices)
 	for (int i = 0; i < numVertices - 4; i++)
 	{
 		int currentCount = this->vertices.size();
-		/*if (currentCount % 1000 == 0)
-			std::cout << currentCount << std::endl;*/
+		if (currentCount % 1000 == 0)
+			std::cout << currentCount << std::endl;
 		randIndex = rand() % currentCount;
 
 		double p1 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
