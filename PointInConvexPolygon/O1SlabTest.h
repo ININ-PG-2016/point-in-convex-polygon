@@ -7,9 +7,7 @@ class O1SlabTest :
 	public PointInConvexPolygonTest
 {
 public:
-	O1SlabTest(const Polygon & p) : PointInConvexPolygonTest(p) {
-		this->maxSlabCount = p.vertices.size();
-	}
+	O1SlabTest(const Polygon & p) : PointInConvexPolygonTest(p), maxSlabCount(p.vertices.size() * 2) {}
 	void preprocess();
 	void deinit();
 	bool testPoint(const Point2D & point);

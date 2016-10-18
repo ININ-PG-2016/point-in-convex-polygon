@@ -13,7 +13,7 @@ private:
 	std::vector<Function>* wedges;
 
 public:
-	O1PolarSubdivisionTest(const Polygon & p) : PointInConvexPolygonTest(p), wedgesPerOctant(1) {}
+	O1PolarSubdivisionTest(const Polygon & p) : PointInConvexPolygonTest(p), wedgesPerOctant(p.vertices.size() / 8) {}
 	void setWedgesPerOctant(int wedges) { wedgesPerOctant = wedges; }
 	void preprocess();
 	void deinit();
