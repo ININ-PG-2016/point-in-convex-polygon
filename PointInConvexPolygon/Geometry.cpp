@@ -9,6 +9,11 @@ void Geometry::getImplicitLine(const Point2D & p1, const Point2D & p2, double* a
 	*aOut = normalVector.x;
 	*bOut = normalVector.y;
 	*cOut = -(*aOut) * p1.x - (*bOut) * p1.y;
+	if (*cOut == 0) {
+		std::cout.precision(30);
+		std::cout << p1.x << ", " << p1.y << std::endl;
+		std::cout << p2.x << ", " << p2.y << std::endl << std::endl;
+	}
 }
 
 double Geometry::getLineIntersectionParameter(double a, double b, double c, const Point2D & p1, const Point2D & p2)
@@ -20,6 +25,7 @@ double Geometry::getLineIntersectionParameter(double a, double b, double c, cons
 bool Geometry::loadPointsFromFile(char * filename, std::vector<Point2D>& points)
 {
 	std::ifstream in(filename);
+	in.precision(30);
 
 	//Could not open the stream
 	if (!in)
@@ -36,7 +42,7 @@ bool Geometry::loadPointsFromFile(char * filename, std::vector<Point2D>& points)
 
 		if (in)
 		{
-			std::vector<float> values;
+			std::vector<double> values;
 			char *token = strtok(line, " ");
 
 			while (token != NULL)
@@ -48,8 +54,9 @@ bool Geometry::loadPointsFromFile(char * filename, std::vector<Point2D>& points)
 				}
 
 				std::stringstream tokenstream(token);
+				tokenstream.precision(30);
 
-				float tmp;
+				double tmp;
 				tokenstream >> tmp;
 				values.push_back(tmp);
 

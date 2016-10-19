@@ -74,7 +74,8 @@ int main(int argc, char **argv)
 		inclusion[i] = false;
 	}
 	//class Polygon *poly = new class Polygon("1000000.poly");
-	class Polygon *poly = new class Polygon(10000);
+	class Polygon *poly = new class Polygon(500000);
+	poly->saveToFile("out.poly");
 
 	if (poly->vertices.size() == 0)
 	{
@@ -83,7 +84,7 @@ int main(int argc, char **argv)
 
 	O1SlabTest test(*poly);
 	//test.setMaxSlabCount(poly->vertices.size());
-	/*test.setWedgesPerOctant(poly->vertices.size() / 8);*/
+	//test.setWedgesPerOctant(poly->vertices.size() / 8);
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;
@@ -108,8 +109,9 @@ int main(int argc, char **argv)
 	for (int i = 0; i < pointCount; i++)
 	{
 		Gdiplus::SolidBrush pointBrush(inclusion[i] ? Gdiplus::Color(255, 0, 255, 0) : Gdiplus::Color(255, 255, 0, 0));
-		gfx.FillEllipse(&pointBrush, (int)(points[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius,
-			(int)(points[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius, 2 * pointRadius, 2 * pointRadius);
+		if(!inclusion[i])
+			gfx.FillEllipse(&pointBrush, (int)(points[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius,
+				(int)(points[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius, 2 * pointRadius, 2 * pointRadius);
 	}
 
 	Gdiplus::Pen pen(Gdiplus::Color(150, 0, 0, 0), 3);
@@ -131,7 +133,7 @@ int main(int argc, char **argv)
 	delete[] points;
 	delete[] inclusion;
 	//system("DrawPoly.exe");
-	std::cout << "Done. Press enter to continue." << std::endl;
-	std::cin.get();
+	/*std::cout << "Done. Press enter to continue." << std::endl;
+	std::cin.get();*/
 	return 0;
 }

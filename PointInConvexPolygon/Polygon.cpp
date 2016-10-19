@@ -81,6 +81,8 @@ void Polygon::generate(int numVertices)
 
 	int randIndex = 0;
 
+	double eps = 1.0 / 100000000000000000000.0;
+
 	for (int i = 0; i < numVertices - 4; i++)
 	{
 		int currentCount = this->vertices.size();
@@ -88,15 +90,20 @@ void Polygon::generate(int numVertices)
 			std::cout << currentCount << std::endl;
 		randIndex = rand() % currentCount;
 
-		double p1 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
-		double p2 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
-
-
 		//std::cout << "generated p: " << p1 << ", " << p2 << std::endl;
 
 		Point2D erased = this->vertices[randIndex];
 		Point2D next = this->vertices[(randIndex + 1) % currentCount];
 		Point2D prev = this->vertices[(randIndex + (currentCount - 1)) % currentCount];
+
+		if ((erased - next).lengthSquare() < eps || (erased - prev).lengthSquare() < eps) {
+			//std::cout << "KURVAAAA" << std::endl;
+			i--;
+			continue;
+		}
+
+		double p1 = ((double)rand() / (RAND_MAX)) * 0.4 + 0.3;
+		double p2 = ((double)rand() / (RAND_MAX)) * 0.4 + 0.3;
 
 		Point2D new1 = p1 * erased + ((1 - p1) * prev);
 		Point2D new2 = p2 * erased + ((1 - p2) * next);
