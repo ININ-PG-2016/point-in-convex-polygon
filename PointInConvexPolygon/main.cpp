@@ -1,6 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include <vector>
+#include <chrono>
+#include <string>
 
 #include "Point2D.h"
 #include "Polygon.h"
@@ -52,7 +55,7 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 	return -1;  // Failure
 }
 
-int main(int argc, char **argv)
+int main2(int argc, char **argv)
 {
 	/*Point2D p1(1, 2);
 	Point2D p2(2, 1);
@@ -64,7 +67,7 @@ int main(int argc, char **argv)
 	//std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
 	
 	srand((unsigned int)time(nullptr));
-	const int pointCount = 100000000;
+	const int pointCount = 10000000;
 	Point2D* points = new Point2D[pointCount];
 	bool* inclusion = new bool[pointCount];
 	for (int i = 0; i < pointCount; i++)
@@ -73,16 +76,16 @@ int main(int argc, char **argv)
 		points[i].y = ((double)rand() / (RAND_MAX)) * 2 - 1;
 		inclusion[i] = false;
 	}
-	class Polygon *poly = new class Polygon("out.poly");
-	//class Polygon *poly = new class Polygon(1000000);
-	//poly->saveToFile("out.poly");
+	//class Polygon *poly = new class Polygon("1000000.poly");
+	class Polygon *poly = new class Polygon(500000);
+	poly->saveToFile("out.poly");
 
 	if (poly->vertices.size() == 0)
 	{
 		exit(1);
 	}
 
-	OLogNPolarSubdivisionTest test(*poly);
+	O1SlabTest test(*poly);
 	//test.setMaxSlabCount(poly->vertices.size());
 	//test.setWedgesPerOctant(poly->vertices.size() / 8);
 	std::cout << "preprocessing" << std::endl;
@@ -136,4 +139,151 @@ int main(int argc, char **argv)
 	/*std::cout << "Done. Press enter to continue." << std::endl;
 	std::cin.get();*/
 	return 0;
+}
+
+void draw(wchar_t* filename, class Polygon* poly, Point2D* points, bool* inclusion, int pointCount)
+{
+	Gdiplus::Bitmap bmp(2500, 2500);
+	Gdiplus::Graphics gfx(&bmp);
+	for (unsigned int i = 0; i < bmp.GetWidth(); i++)
+		for (unsigned int j = 0; j < bmp.GetHeight(); j++)
+			bmp.SetPixel(i, j, Gdiplus::Color(255, 255, 255, 255));
+
+	int pointRadius = 2;
+
+	for (int i = 0; i < pointCount; i++)
+	{
+		Gdiplus::SolidBrush pointBrush(inclusion[i] ? Gdiplus::Color(255, 0, 255, 0) : Gdiplus::Color(255, 255, 0, 0));
+		gfx.FillEllipse(&pointBrush, (int)(points[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius,
+			(int)(points[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2) - pointRadius, 2 * pointRadius, 2 * pointRadius);
+	}
+
+	Gdiplus::Pen pen(Gdiplus::Color(150, 0, 0, 0), 3);
+	for (int i = 0; i < poly->vertices.size() - 1; i++)
+		gfx.DrawLine(&pen, (int)(poly->vertices[i].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[i].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[i + 1].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[i + 1].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2));
+	gfx.DrawLine(&pen, (int)(poly->vertices[poly->vertices.size() - 1].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[poly->vertices.size() - 1].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[0].x * bmp.GetWidth() / 2 + bmp.GetWidth() / 2),
+		(int)(poly->vertices[0].y * bmp.GetWidth() / 2 + bmp.GetWidth() / 2));
+
+	CLSID  encoderClsid;
+	GetEncoderClsid(L"image/png", &encoderClsid);
+	bmp.Save(filename, &encoderClsid);
+}
+
+long test(PointInConvexPolygonTest* test, Point2D* points, bool* inclusion, int pointCount)
+{
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	test->preprocess();
+	for (int i = 0; i < pointCount; i++)
+	{
+		inclusion[i] = test->testPoint(points[i]);
+	}
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	test->deinit();
+	int inside = 0;
+	int outside = 0;
+	for (int i = 0; i < pointCount; i++)
+	{
+		if (inclusion[i])
+			inside++;
+		else
+			outside++;
+	}
+	std::cout << "Inside: " << inside << ", Outside: " << outside << std::endl;
+	return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+}
+
+int main(int argc, char **argv)
+{
+	ULONG_PTR gdiplusToken;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
+
+	srand((unsigned int)time(nullptr));
+	const int pointCount = 10000000;
+	Point2D* points = new Point2D[pointCount];
+	bool* inclusion = new bool[pointCount];
+	for (int i = 0; i < pointCount; i++)
+	{
+		points[i].x = ((double)rand() / (RAND_MAX)) * 2 - 1;
+		points[i].y = ((double)rand() / (RAND_MAX)) * 2 - 1;
+	}
+
+	std::vector<int> pointCounts = {10000, 100000, 1000000, 10000000, 100000000};
+	std::vector<int> polygonSizes = {10, 100, 1000, 10000, 100000, 1000000};
+	
+	for (int i = 0; i < polygonSizes.size() - 2; i++)
+	{
+		std::string filename = std::string("") + std::to_string(polygonSizes[i]) + std::string(".poly");
+		class Polygon* poly = new class Polygon((char*)filename.c_str());
+		std::string edgesString = std::string("Edges = ") + std::to_string(polygonSizes[i]);
+		std::string testName;
+
+		testName = "HPI, " + edgesString;
+		if (polygonSizes[i] < 100000)
+		{
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 3; j++)
+			{
+				std::cout << testName << std::endl;
+				HalfPlaneIntersectionTest t(*poly);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		testName = "CP, " + edgesString;
+		if (polygonSizes[i] < 100000)
+		{
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 3; j++)
+			{
+				std::cout << testName << std::endl;
+				CrossProductTest t(*poly);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(LogN) slabs, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 3; j++)
+			{
+				std::cout << testName << std::endl;
+				OLogNSlabTest t(*poly);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) polar, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 3; j++)
+			{
+				std::cout << testName << std::endl;
+				O1PolarSubdivisionTest t(*poly);
+				t.setWedgesPerOctant(poly->vertices.size() / 8);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		delete poly;
+	}
+	delete[] points;
+	delete[] inclusion;
 }
