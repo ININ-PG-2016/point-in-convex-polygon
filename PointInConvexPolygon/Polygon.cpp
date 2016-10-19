@@ -24,6 +24,14 @@ Polygon::Polygon(const std::vector<Point2D>& vertices)
 	this->vertices = vertices;
 }
 
+Polygon::Polygon(char * filename)
+{
+	if (!loadFromFile(filename)) {
+		this->vertices.clear();
+		std::cerr << "Could not read polygon data from file." << std::endl;
+	}
+}
+
 Polygon::~Polygon()
 {}
 
@@ -48,10 +56,10 @@ bool Polygon::saveToFile(char * filename)
 	std::cout << "Polygon sucessfully saved." << std::endl;
 }
 
-void Polygon::loadFromFile(char * filename)
+bool Polygon::loadFromFile(char * filename)
 {
 	this->vertices.clear();
-	Geometry::loadPointsFromFile(filename, this->vertices);
+	return Geometry::loadPointsFromFile(filename, this->vertices);
 }
 
 void Polygon::generate(int numVertices)

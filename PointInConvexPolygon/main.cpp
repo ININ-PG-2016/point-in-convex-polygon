@@ -73,11 +73,17 @@ int main(int argc, char **argv)
 		points[i].y = ((double)rand() / (RAND_MAX)) * 2 - 1;
 		inclusion[i] = false;
 	}
+	//class Polygon *poly = new class Polygon("1000000.poly");
 	class Polygon *poly = new class Polygon(10000);
-	poly->saveToFile("out.poly");
-	O1PolarSubdivisionTest test(*poly);
+
+	if (poly->vertices.size() == 0)
+	{
+		exit(1);
+	}
+
+	O1SlabTest test(*poly);
 	//test.setMaxSlabCount(poly->vertices.size());
-	test.setWedgesPerOctant(poly->vertices.size() / 8);
+	/*test.setWedgesPerOctant(poly->vertices.size() / 8);*/
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;
@@ -125,6 +131,7 @@ int main(int argc, char **argv)
 	delete[] points;
 	delete[] inclusion;
 	//system("DrawPoly.exe");
+	std::cout << "Done. Press enter to continue." << std::endl;
 	std::cin.get();
 	return 0;
 }
