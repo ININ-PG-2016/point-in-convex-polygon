@@ -1,4 +1,5 @@
 #include "Polygon.h"
+#include "Geometry.h"
 
 #include <fstream>
 #include <iostream>
@@ -49,7 +50,8 @@ bool Polygon::saveToFile(char * filename)
 
 void Polygon::loadFromFile(char * filename)
 {
-	
+	this->vertices.clear();
+	Geometry::loadPointsFromFile(filename, this->vertices);
 }
 
 void Polygon::generate(int numVertices)
