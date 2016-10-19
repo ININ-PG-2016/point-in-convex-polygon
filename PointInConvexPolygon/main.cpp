@@ -67,18 +67,17 @@ int main(int argc, char **argv)
 	const int pointCount = 10000000;
 	Point2D* points = new Point2D[pointCount];
 	bool* inclusion = new bool[pointCount];
-	/*for (int i = 0; i < pointCount; i++)
+	for (int i = 0; i < pointCount; i++)
 	{
 		points[i].x = ((double)rand() / (RAND_MAX)) * 2 - 1;
 		points[i].y = ((double)rand() / (RAND_MAX)) * 2 - 1;
 		inclusion[i] = false;
-	}*/
-	class Polygon *poly = new class Polygon(300000);
+	}
+	class Polygon *poly = new class Polygon(10000);
 	poly->saveToFile("out.poly");
-	exit(0);
-	OLogNSlabTest test(*poly);
-	//test.setMaxSlabCount(poly->vertices.size() * 2);
-	//test.setWedgesPerOctant(poly->vertices.size() / 8);
+	O1PolarSubdivisionTest test(*poly);
+	//test.setMaxSlabCount(poly->vertices.size());
+	test.setWedgesPerOctant(poly->vertices.size() / 8);
 	std::cout << "preprocessing" << std::endl;
 	test.preprocess();
 	std::cout << "testing points" << std::endl;
