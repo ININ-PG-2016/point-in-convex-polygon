@@ -81,7 +81,7 @@ void Polygon::generate(int numVertices)
 
 	int randIndex = 0;
 
-	double eps = 1.0 / 100000000000000000000.0;
+	double eps = 1.0 / 1000000000000000000000.0;
 
 	for (int i = 0; i < numVertices - 4; i++)
 	{
@@ -98,7 +98,6 @@ void Polygon::generate(int numVertices)
 
 		if ((erased - next).lengthSquare() < eps || (erased - prev).lengthSquare() < eps) {
 			//std::cout << "KURVAAAA" << std::endl;
-			i--;
 			continue;
 		}
 
