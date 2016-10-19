@@ -79,7 +79,7 @@ void Polygon::generate(int numVertices)
 	this->vertices.push_back(Point2D( 1.0,  0.0));
 	this->vertices.push_back(Point2D( 0.0,  1.0));
 
-	int randIndex = 0;
+	int nextIndex = 0;
 
 	double eps = 1.0 / 1000000000000000000000.0;
 
@@ -88,29 +88,29 @@ void Polygon::generate(int numVertices)
 		int currentCount = this->vertices.size();
 		if (currentCount % 1000 == 0)
 			std::cout << currentCount << std::endl;
-		randIndex = rand() % currentCount;
+		nextIndex = (nextIndex + 2) % currentCount;
 
 		//std::cout << "generated p: " << p1 << ", " << p2 << std::endl;
 
-		Point2D erased = this->vertices[randIndex];
-		Point2D next = this->vertices[(randIndex + 1) % currentCount];
-		Point2D prev = this->vertices[(randIndex + (currentCount - 1)) % currentCount];
+		Point2D erased = this->vertices[nextIndex];
+		Point2D next = this->vertices[(nextIndex + 1) % currentCount];
+		Point2D prev = this->vertices[(nextIndex + (currentCount - 1)) % currentCount];
 
 		if ((erased - next).lengthSquare() < eps || (erased - prev).lengthSquare() < eps) {
-			//std::cout << "KURVAAAA" << std::endl;
+			i--;
 			continue;
 		}
 
-		double p1 = ((double)rand() / (RAND_MAX)) * 0.4 + 0.3;
-		double p2 = ((double)rand() / (RAND_MAX)) * 0.4 + 0.3;
+		double p1 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
+		double p2 = ((double)rand() / (RAND_MAX)) * 0.5 + 0.25;
 
 		Point2D new1 = p1 * erased + ((1 - p1) * prev);
 		Point2D new2 = p2 * erased + ((1 - p2) * next);
 
 		std::vector<Point2D> added ({new1, new2});
 
-		this->vertices.erase(this->vertices.begin() + randIndex);
-		this->vertices.insert(this->vertices.begin() + randIndex, added.begin(), added.end());
+		this->vertices.erase(this->vertices.begin() + nextIndex);
+		this->vertices.insert(this->vertices.begin() + nextIndex, added.begin(), added.end());
 	}
 
 	double yMin = HUGE_VAL, yMax = -HUGE_VAL;

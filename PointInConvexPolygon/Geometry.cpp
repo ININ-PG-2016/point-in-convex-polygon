@@ -73,6 +73,8 @@ bool Geometry::loadPointsFromFile(char * filename, std::vector<Point2D>& points)
 		}
 	}
 
+	std::cout << "Loaded " << points.size() << " points" << std::endl;
+
 	in.close();
 	return true;
 }

@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	//std::cout << (p3 / 2).dot(Point2D(2, 3)) << std::endl;
 	
 	srand((unsigned int)time(nullptr));
-	const int pointCount = 10000000;
+	const int pointCount = 100000000;
 	Point2D* points = new Point2D[pointCount];
 	bool* inclusion = new bool[pointCount];
 	for (int i = 0; i < pointCount; i++)
@@ -73,16 +73,16 @@ int main(int argc, char **argv)
 		points[i].y = ((double)rand() / (RAND_MAX)) * 2 - 1;
 		inclusion[i] = false;
 	}
-	//class Polygon *poly = new class Polygon("1000000.poly");
-	class Polygon *poly = new class Polygon(500000);
-	poly->saveToFile("out.poly");
+	class Polygon *poly = new class Polygon("out.poly");
+	//class Polygon *poly = new class Polygon(1000000);
+	//poly->saveToFile("out.poly");
 
 	if (poly->vertices.size() == 0)
 	{
 		exit(1);
 	}
 
-	O1SlabTest test(*poly);
+	OLogNPolarSubdivisionTest test(*poly);
 	//test.setMaxSlabCount(poly->vertices.size());
 	//test.setWedgesPerOctant(poly->vertices.size() / 8);
 	std::cout << "preprocessing" << std::endl;
