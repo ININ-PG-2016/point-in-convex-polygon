@@ -143,7 +143,7 @@ int main2(int argc, char **argv)
 
 void draw(wchar_t* filename, class Polygon* poly, Point2D* points, bool* inclusion, int pointCount)
 {
-	Gdiplus::Bitmap bmp(2500, 2500);
+	/*Gdiplus::Bitmap bmp(2500, 2500);
 	Gdiplus::Graphics gfx(&bmp);
 	for (unsigned int i = 0; i < bmp.GetWidth(); i++)
 		for (unsigned int j = 0; j < bmp.GetHeight(); j++)
@@ -171,7 +171,7 @@ void draw(wchar_t* filename, class Polygon* poly, Point2D* points, bool* inclusi
 
 	CLSID  encoderClsid;
 	GetEncoderClsid(L"image/png", &encoderClsid);
-	bmp.Save(filename, &encoderClsid);
+	bmp.Save(filename, &encoderClsid);*/
 }
 
 long test(PointInConvexPolygonTest* test, Point2D* points, bool* inclusion, int pointCount)
@@ -216,7 +216,7 @@ int main(int argc, char **argv)
 	std::vector<int> pointCounts = {10000, 100000, 1000000, 10000000, 100000000};
 	std::vector<int> polygonSizes = {10, 100, 1000, 10000, 100000, 1000000};
 	
-	for (int i = 0; i < polygonSizes.size() - 2; i++)
+	for (int i = 0; i < polygonSizes.size() - 1; i++)
 	{
 		std::string filename = std::string("") + std::to_string(polygonSizes[i]) + std::string(".poly");
 		class Polygon* poly = new class Polygon((char*)filename.c_str());
@@ -227,7 +227,7 @@ int main(int argc, char **argv)
 		if (polygonSizes[i] < 100000)
 		{
 			std::ofstream file(testName + ".csv");
-			for (int j = 0; j < pointCounts.size() - 3; j++)
+			for (int j = 0; j < pointCounts.size() - 2; j++)
 			{
 				std::cout << testName << std::endl;
 				HalfPlaneIntersectionTest t(*poly);
@@ -242,7 +242,7 @@ int main(int argc, char **argv)
 		if (polygonSizes[i] < 100000)
 		{
 			std::ofstream file(testName + ".csv");
-			for (int j = 0; j < pointCounts.size() - 3; j++)
+			for (int j = 0; j < pointCounts.size() - 2; j++)
 			{
 				std::cout << testName << std::endl;
 				CrossProductTest t(*poly);
@@ -256,7 +256,7 @@ int main(int argc, char **argv)
 		{
 			testName = "O(LogN) slabs, " + edgesString;
 			std::ofstream file(testName + ".csv");
-			for (int j = 0; j < pointCounts.size() - 3; j++)
+			for (int j = 0; j < pointCounts.size() - 1; j++)
 			{
 				std::cout << testName << std::endl;
 				OLogNSlabTest t(*poly);
@@ -268,13 +268,192 @@ int main(int argc, char **argv)
 		}
 
 		{
-			testName = "O(1) polar, " + edgesString;
+			testName = "O(LogN) polar, " + edgesString;
 			std::ofstream file(testName + ".csv");
-			for (int j = 0; j < pointCounts.size() - 3; j++)
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				OLogNPolarSubdivisionTest t(*poly);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) polar, M = sqrt(N), " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1PolarSubdivisionTest t(*poly);
+				t.setWedgesPerOctant(sqrt(poly->vertices.size()) / 8);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) polar, M = N x 0.25, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1PolarSubdivisionTest t(*poly);
+				t.setWedgesPerOctant((poly->vertices.size() / 4) / 8);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) polar, M = N x 0.5, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1PolarSubdivisionTest t(*poly);
+				t.setWedgesPerOctant((poly->vertices.size() / 2) / 8);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) polar, M = N, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
 			{
 				std::cout << testName << std::endl;
 				O1PolarSubdivisionTest t(*poly);
 				t.setWedgesPerOctant(poly->vertices.size() / 8);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) polar, M = N x 2, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1PolarSubdivisionTest t(*poly);
+				t.setWedgesPerOctant((poly->vertices.size() * 2) / 8);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) polar, M = N x 4, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1PolarSubdivisionTest t(*poly);
+				t.setWedgesPerOctant((poly->vertices.size() * 4) / 8);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) slabs, M = sqrt(N), " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1SlabTest t(*poly);
+				t.setMaxSlabCount(sqrt(poly->vertices.size()));
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) slabs, M = N x 0.25, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1SlabTest t(*poly);
+				t.setMaxSlabCount(poly->vertices.size() / 4);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) slabs, M = N x 0.5, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1SlabTest t(*poly);
+				t.setMaxSlabCount(poly->vertices.size() / 2);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) slabs, M = N, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1SlabTest t(*poly);
+				t.setMaxSlabCount(poly->vertices.size());
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) slabs, M = N x 2, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1SlabTest t(*poly);
+				t.setMaxSlabCount(poly->vertices.size() * 2);
+				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
+				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
+				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);
+			}
+			file.close();
+		}
+
+		{
+			testName = "O(1) slabs, M = N x 4, " + edgesString;
+			std::ofstream file(testName + ".csv");
+			for (int j = 0; j < pointCounts.size() - 1; j++)
+			{
+				std::cout << testName << std::endl;
+				O1SlabTest t(*poly);
+				t.setMaxSlabCount(poly->vertices.size() * 4);
 				file << pointCounts[j] << ";" << test(&t, points, inclusion, pointCounts[j]) << ";" << std::endl;
 				std::string picName = testName + ", N = " + std::to_string(pointCounts[j]) + ".png";
 				draw((wchar_t*)std::wstring(picName.begin(), picName.end()).c_str(), poly, points, inclusion, pointCounts[j]);

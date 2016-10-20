@@ -18,7 +18,7 @@ private:
 	Function* edgeFunctions;
 
 public:
-	O1PolarSubdivisionTest(const Polygon & p) : PointInConvexPolygonTest(p), wedgesPerOctant(p.vertices.size() / 8) {}
+	O1PolarSubdivisionTest(const class Polygon & p) : PointInConvexPolygonTest(p) { setWedgesPerOctant(p.vertices.size() / 8); }
 	void setWedgesPerOctant(int wedges);
 	void preprocess();
 	void deinit();

@@ -7,6 +7,8 @@
 void O1PolarSubdivisionTest::setWedgesPerOctant(int wedges)
 {
 	wedgesPerOctant = wedges;
+	if (wedgesPerOctant < 1)
+		wedgesPerOctant = 1;
 	wedgesPerOctantTimes4Minus1 = wedgesPerOctant * 4 - 1;
 	wedgesPerOctantTimes2Minus1 = wedgesPerOctant * 2 - 1;
 	wedgesPerOctantTimes2 = wedgesPerOctant * 2;
